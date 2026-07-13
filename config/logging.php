@@ -18,6 +18,7 @@ return [
     |
     */
 
+    // The default channel used for all log writes. This can be overridden via LOG_CHANNEL in .env.
     'default' => env('LOG_CHANNEL', 'stack'),
 
     /*
@@ -52,12 +53,16 @@ return [
 
     'channels' => [
 
+        // The stack channel combines one or more channels into a single logging stream.
+        // By default it includes the 'single' file channel, but you can extend it using LOG_STACK.
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', (string) env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
 
+        // Single file logging writes all messages into storage/logs/laravel.log.
+        // Useful for local development or when you do not need log rotation.
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

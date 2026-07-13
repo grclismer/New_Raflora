@@ -3,6 +3,22 @@
         <div class="w-full max-w-xl glass-card p-10">
             <h1 class="serif text-3xl md:text-4xl font-bold text-white text-center mb-6">REGISTER</h1>
 
+            @if(session('status'))
+                <div class="mb-6 p-3 rounded-lg bg-green-900/50 border border-green-500 text-green-300 text-sm text-center">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-6 p-3 rounded-lg bg-red-900/50 border border-red-500 text-red-300 text-sm">
+                    <ul class="space-y-1">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('register.attempt') }}" class="space-y-6">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

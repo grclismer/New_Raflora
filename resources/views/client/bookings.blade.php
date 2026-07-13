@@ -31,85 +31,39 @@
                         </tr>
                     </thead>
                     <tbody id="bookingsTableBody">
-                        <!-- Wedding - Active -->
-                        <tr class="border-b border-white/10 hover:bg-white/5 transition booking-row all active" data-status="active">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://via.placeholder.com/48?text=Wedding" alt="Wedding" class="w-12 h-12 rounded object-cover">
-                                    <span class="font-semibold">Sarah & John's Wedding</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">Wedding</td>
-                            <td class="py-4 px-4">June 15, 2026<br><span class="text-xs text-white/60">10:00 AM - 6:00 PM</span></td>
-                            <td class="py-4 px-4">Marina Bay Resort, Manila</td>
-                            <td class="py-4 px-4 text-center"><span class="inline-block bg-blue-500 px-3 py-1 rounded-full text-xs font-semibold">Upcoming</span></td>
-                            <td class="py-4 px-4">
-                                <div class="flex gap-2 justify-center">
-                                    <button onclick="openDetailsModal(1)" class="text-blue-400 hover:text-blue-300 transition" title="View Details"><i class="fa-solid fa-eye"></i></button>
-                                    <button onclick="openEditModal(1)" class="text-yellow-400 hover:text-yellow-300 transition" title="Edit"><i class="fa-solid fa-edit"></i></button>
-                                    <button onclick="openCancelModal(1)" class="text-red-400 hover:text-red-300 transition" title="Cancel"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Corporate Event - Active -->
-                        <tr class="border-b border-white/10 hover:bg-white/5 transition booking-row all active" data-status="active">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://via.placeholder.com/48?text=Corporate" alt="Corporate" class="w-12 h-12 rounded object-cover">
-                                    <span class="font-semibold">ABC Corp Annual Gala</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">Corporate Event</td>
-                            <td class="py-4 px-4">July 20, 2026<br><span class="text-xs text-white/60">5:00 PM - 11:00 PM</span></td>
-                            <td class="py-4 px-4">BGC Grand Ballroom, Manila</td>
-                            <td class="py-4 px-4 text-center"><span class="inline-block bg-blue-500 px-3 py-1 rounded-full text-xs font-semibold">Upcoming</span></td>
-                            <td class="py-4 px-4">
-                                <div class="flex gap-2 justify-center">
-                                    <button onclick="openDetailsModal(2)" class="text-blue-400 hover:text-blue-300 transition" title="View Details"><i class="fa-solid fa-eye"></i></button>
-                                    <button onclick="openEditModal(2)" class="text-yellow-400 hover:text-yellow-300 transition" title="Edit"><i class="fa-solid fa-edit"></i></button>
-                                    <button onclick="openCancelModal(2)" class="text-red-400 hover:text-red-300 transition" title="Cancel"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Birthday Party - Completed -->
-                        <tr class="border-b border-white/10 hover:bg-white/5 transition booking-row all completed" data-status="completed">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://via.placeholder.com/48?text=Birthday" alt="Birthday" class="w-12 h-12 rounded object-cover">
-                                    <span class="font-semibold">Maria's Birthday Bash</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">Birthday Party</td>
-                            <td class="py-4 px-4">May 10, 2026<br><span class="text-xs text-white/60">2:00 PM - 8:00 PM</span></td>
-                            <td class="py-4 px-4">Quezon City Sports Club</td>
-                            <td class="py-4 px-4 text-center"><span class="inline-block bg-green-500 px-3 py-1 rounded-full text-xs font-semibold">Completed</span></td>
-                            <td class="py-4 px-4">
-                                <div class="flex gap-2 justify-center">
-                                    <button onclick="openDetailsModal(3)" class="text-blue-400 hover:text-blue-300 transition" title="View Details"><i class="fa-solid fa-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Debut - Cancelled -->
-                        <tr class="border-b border-white/10 hover:bg-white/5 transition booking-row all cancelled" data-status="cancelled">
-                            <td class="py-4 px-4">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://via.placeholder.com/48?text=Debut" alt="Debut" class="w-12 h-12 rounded object-cover">
-                                    <span class="font-semibold">Angela's 18th Debut</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-4">Debut</td>
-                            <td class="py-4 px-4">April 5, 2026<br><span class="text-xs text-white/60">6:00 PM - 12:00 AM</span></td>
-                            <td class="py-4 px-4">Pasay Convention Center</td>
-                            <td class="py-4 px-4 text-center"><span class="inline-block bg-red-500 px-3 py-1 rounded-full text-xs font-semibold">Cancelled</span></td>
-                            <td class="py-4 px-4">
-                                <div class="flex gap-2 justify-center">
-                                    <button onclick="openDetailsModal(4)" class="text-blue-400 hover:text-blue-300 transition" title="View Details"><i class="fa-solid fa-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
+                        @forelse($bookings as $booking)
+                            @php
+                                $statusClass = match ($booking->status) {
+                                    'quotation_sent' => 'bg-yellow-500',
+                                    'payment_pending' => 'bg-orange-500',
+                                    'downpayment_received' => 'bg-blue-500',
+                                    'completed' => 'bg-green-500',
+                                    'cancelled' => 'bg-red-500',
+                                    default => 'bg-purple-500',
+                                };
+                            @endphp
+                            <tr class="border-b border-white/10 hover:bg-white/5 transition booking-row all {{ $booking->status }}" data-status="{{ $booking->status }}">
+                                <td class="py-4 px-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://via.placeholder.com/48?text={{ ucfirst($booking->event_type ?? 'Event') }}" alt="{{ ucfirst($booking->event_type ?? 'Event') }}" class="w-12 h-12 rounded object-cover">
+                                        <span class="font-semibold">{{ ucfirst($booking->event_type ?? 'Event') }} Booking</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4">{{ ucfirst($booking->event_type ?? 'N/A') }}</td>
+                                <td class="py-4 px-4">{{ optional($booking->event_date)->format('F j, Y') ?? 'TBD' }}</td>
+                                <td class="py-4 px-4">{{ $booking->venue ?? 'TBD' }}</td>
+                                <td class="py-4 px-4 text-center"><span class="inline-block {{ $statusClass }} px-3 py-1 rounded-full text-xs font-semibold">{{ str_replace('_', ' ', ucfirst($booking->status)) }}</span></td>
+                                <td class="py-4 px-4">
+                                    <div class="flex gap-2 justify-center">
+                                        <a href="{{ route('bookings.analysis', ['booking' => $booking->id]) }}" class="text-blue-400 hover:text-blue-300 transition" title="View Analysis"><i class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="py-12 text-center text-white/60">No bookings found. Create one to begin.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
                 <div id="emptyState" class="hidden text-center py-12">

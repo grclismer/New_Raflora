@@ -15,7 +15,7 @@
             </button>
         </div>
         <div class="h-full flex flex-col justify-center items-center gap-8 text-white text-xl px-6">
-            <a href="{{ route('dashboard') }}" class="font-semibold">Dashboard</a>
+            <a href="{{ route('client.dashboard') }}" class="font-semibold">Dashboard</a>
             <a href="{{ route('bookings') }}" class="font-semibold">My Bookings</a>
             <a href="{{ route('booking-history') }}" class="font-semibold">Booking History</a>
             <a href="{{ route('account-settings') }}" class="font-semibold">Account Settings</a>

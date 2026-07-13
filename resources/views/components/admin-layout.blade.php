@@ -15,7 +15,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-purple-50 flex">
-    <aside class="w-64 bg-white shadow-lg flex-shrink-0">
+    <aside class="w-64 bg-white shadow-lg flex-shrink-0 flex flex-col">
         <div class="p-6 border-b border-purple-100">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-full bg-purple-700 flex items-center justify-center">
@@ -27,14 +27,12 @@
                 </div>
             </div>
         </div>
-        <nav class="p-4 space-y-4">
+
+        <nav class="p-4 space-y-4 flex-1">
             <div>
                 <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">Overview</p>
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.dashboard') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
                     <i class="fa-solid fa-gauge w-5"></i><span>Dashboard</span>
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-700">
-                    <i class="fa-solid fa-bell w-5"></i><span>Notifications</span>
                 </a>
             </div>
 
@@ -43,8 +41,15 @@
                 <a href="{{ route('admin.bookings') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.bookings*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
                     <i class="fa-solid fa-calendar-days w-5"></i><span>All Bookings</span>
                 </a>
-                <a href="{{ route('admin.bookings') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-700">
-                    <i class="fa-solid fa-circle-check w-5"></i><span>Review & Validate</span>
+                <a href="{{ route('admin.quotations') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.quotations*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
+                    <i class="fa-solid fa-file-invoice-dollar w-5"></i><span>Quotations</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">Operations</p>
+                <a href="{{ route('admin.ai-analysis') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.ai-analysis*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
+                    <i class="fa-solid fa-brain w-5"></i><span>AI Analysis</span>
                 </a>
                 <a href="{{ route('admin.quotations') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.quotations*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
                     <i class="fa-solid fa-file-invoice-dollar w-5"></i><span>Quotations</span>
@@ -52,54 +57,28 @@
             </div>
 
             <div>
-                <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">AI Operations</p>
-                <a href="{{ route('admin.ai-analysis') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.ai-analysis*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
-                    <i class="fa-solid fa-brain w-5"></i><span>AI Analysis</span>
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-700">
-                    <i class="fa-solid fa-palette w-5"></i><span>Flower Suggestions</span>
-                </a>
-            </div>
-
-            <div>
-                <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">Inventory</p>
-                <a href="{{ route('admin.inventory') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.inventory*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
-                    <i class="fa-solid fa-boxes-stacked w-5"></i><span>Stock Management</span>
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-700">
-                    <i class="fa-solid fa-truck-fast w-5"></i><span>Procurement</span>
-                </a>
-            </div>
-
-            <div>
-                <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">Post-Event</p>
-                <a href="{{ route('admin.return-tracking') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.return-tracking*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
-                    <i class="fa-solid fa-rotate-left w-5"></i><span>Return Audits</span>
-                </a>
-                <a href="{{ route('admin.reports') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.reports*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
-                    <i class="fa-solid fa-chart-line w-5"></i><span>Reports & Analytics</span>
-                </a>
-                <a href="{{ route('admin.reports') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-700">
-                    <i class="fa-solid fa-file-lines w-5"></i><span>Audit Logs</span>
+                <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">Clients</p>
+                <a href="{{ route('admin.client-records') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.client-records*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
+                    <i class="fa-solid fa-folder-open w-5"></i><span>Client Records</span>
                 </a>
             </div>
 
             <div>
                 <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">System</p>
-                <a href="{{ route('admin.client-records') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.client-records*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
-                    <i class="fa-solid fa-folder-open w-5"></i><span>Client Records</span>
-                </a>
                 <a href="{{ route('admin.settings') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.settings*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
                     <i class="fa-solid fa-gear w-5"></i><span>Settings</span>
                 </a>
             </div>
         </nav>
 
-        <div class="mt-auto px-6 pb-6">
-            <button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-purple-700 text-white font-semibold shadow hover:bg-purple-800 transition">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Log Out</span>
-            </button>
+        <div class="p-4 border-t border-purple-100">
+            <form method="POST" action="{{ route('logout') }}" class="w-full">
+                @csrf
+                <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-purple-700 text-white font-semibold shadow hover:bg-purple-800 transition">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Log Out</span>
+                </button>
+            </form>
         </div>
     </aside>
 
