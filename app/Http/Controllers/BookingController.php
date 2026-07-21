@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+use App\Services\GeminiVisionService;
+use App\Models\InventoryItem;
 
 class BookingController extends Controller
 {
@@ -42,6 +45,8 @@ class BookingController extends Controller
      */
     public function store(BookingRequest $request): RedirectResponse
     {
+        set_time_limit(120); // Prevent PHP from timing out while waiting for AI requests
+
         $validated = $request->validated();
         $client = $this->resolveClient();
 
@@ -50,7 +55,6 @@ class BookingController extends Controller
             $inspirationImagePath = $request->file('inspiration_image')->store('bookings/inspiration-images', 'public');
         }
 
-        $totalQuoted = $this->estimateQuote($validated['event_type']);
         $priceValidUntil = Carbon::now()->addDays(7)->toDateString();
         $suggestedProcurement = Carbon::parse($validated['event_date'])->subDays(7)->toDateString();
 
@@ -59,21 +63,120 @@ class BookingController extends Controller
             'handled_by' => null,
             'event_type' => $validated['event_type'],
             'event_date' => $validated['event_date'],
+            'event_time' => $validated['event_time'],
             'venue' => $validated['venue'],
             'special_requests' => $validated['special_requests'] ?? null,
             'inspiration_image' => $inspirationImagePath,
             'status' => 'quotation_sent',
-            'total_quoted' => $totalQuoted,
+            'total_quoted' => 0,
             'price_valid_until' => $priceValidUntil,
             'suggested_procurement_date' => $suggestedProcurement,
         ]);
 
-        AiAnalysisResult::create([
-            'booking_id' => $booking->id,
-            'raw_gemini_response' => json_encode(['simulated' => true, 'event_type' => $booking->event_type]),
-            'suggested_materials' => $this->analysisMaterialsFor($booking->event_type),
-            'analyzed_at' => Carbon::now(),
-        ]);
+        // Attempt real Gemini vision analysis; fall back to simulated if it fails
+        try {
+            if ($inspirationImagePath) {
+                $fullPath = storage_path('app/public/' . $inspirationImagePath);
+            } else {
+                $fullPath = null;
+            }
+
+            if (!empty($fullPath) && file_exists($fullPath)) {
+                $vision = new GeminiVisionService();
+                try {
+                    $result = $vision->analyzeImageFromPath(
+                        $fullPath,
+                        $validated['special_requests'] ?? null,
+                        $validated['event_type'] ?? null,
+                        $validated['event_time'] ?? null,
+                        $validated['venue'] ?? null
+                    );
+
+                    Log::info('Gemini Raw Analysis Output: ', $result);
+
+                    $materials = $result['analysis']['suggested_materials'] ?? [];
+                } catch (\Throwable $e) {
+                    Log::error('Gemini Execution Failed: ' . $e->getMessage());
+                    throw $e;
+                }
+
+                if (empty($materials)) {
+                    Log::warning('Gemini analysis returned no suggested materials.', [
+                        'booking_id' => $booking->id,
+                        'model' => $result['model_used'] ?? null,
+                        'raw_response' => $result['raw_response'],
+                    ]);
+                }
+
+                $analysisModel = AiAnalysisResult::create([
+                    'booking_id' => $booking->id,
+                    'raw_gemini_response' => is_array($result['raw_response']) ? json_encode($result['raw_response']) : $result['raw_response'],
+                    'suggested_materials' => $materials,
+                    'analyzed_at' => Carbon::now(),
+                ]);
+
+                // Persist suggested materials into booking_items pivot
+                if (is_array($materials) && count($materials) > 0) {
+                    $totalCost = 0;
+                    foreach ($materials as $mat) {
+                        $itemName = $mat['item_name'] ?? null;
+                        if (!$itemName) continue;
+
+                        $quantity = (float)($mat['estimated_quantity'] ?? 1);
+                        $unitCost = (float)($mat['estimated_unit_cost_php'] ?? $mat['estimated_unit_cost'] ?? 0);
+                        if ($quantity <= 0 || $unitCost <= 0) {
+                            continue;
+                        }
+
+                        $totalCost += $quantity * $unitCost;
+
+                        $category = $mat['category'] ?? 'flower';
+                        $unitType = $mat['unit_type'] ?? 'stem';
+
+                        $inventory = InventoryItem::firstOrCreate(
+                            ['name' => $itemName],
+                            [
+                                'category' => $category,
+                                'is_perishable' => true,
+                                'current_stock' => 0,
+                                'unit_cost' => $unitCost,
+                                'min_stock' => 0,
+                                'unit' => $unitType,
+                            ]
+                        );
+
+                        // Attach to booking_items pivot
+                        $booking->inventoryItems()->attach($inventory->id, [
+                            'quantity' => $quantity,
+                            'quoted_unit_price' => $unitCost,
+                            'is_ai_suggested' => 1,
+                            'procurement_status' => 'pending',
+                            'suggested_order_date' => $booking->suggested_procurement_date,
+                            'suggested_delivery_date' => null,
+                            'notes' => 'AI suggested',
+                        ]);
+                    }
+
+                    // Update booking total_quoted based on AI materials
+                    $booking->total_quoted = $totalCost;
+                    $booking->save();
+                }
+            } else {
+                throw new \Exception('No inspiration image available for analysis.');
+            }
+        } catch (\Throwable $e) {
+            Log::error('Gemini Failure: ' . $e->getMessage());
+
+            AiAnalysisResult::create([
+                'booking_id' => $booking->id,
+                'raw_gemini_response' => json_encode(['error' => $e->getMessage()]),
+                'suggested_materials' => [],
+                'analyzed_at' => Carbon::now(),
+            ]);
+
+            $booking->total_quoted = 0;
+            $booking->save();
+        }
 
         return redirect()->route('bookings.analysis', ['booking' => $booking->id])
             ->with('success', 'Booking request created. Preparing your quotation now.');
@@ -93,10 +196,37 @@ class BookingController extends Controller
         $analysis = $booking->aiAnalyses()->latest('analyzed_at')->first();
         $payment = $booking->payments()->latest()->first();
 
+        // Load attached inventory items and compute total cost from pivot data when available
+        $items = $booking->inventoryItems()->get();
+        $calculatedTotal = 0;
+        foreach ($items as $it) {
+            $qty = floatval($it->pivot->quantity ?? 0);
+            $unit = floatval($it->pivot->quoted_unit_price ?? 0);
+            $calculatedTotal += $qty * $unit;
+        }
+
+        // When no pivot items are present, try to compute total from the raw AI analysis data
+        $analysisTotal = 0;
+        $analysisMaterials = [];
+        if ($analysis) {
+            $analysisMaterials = $analysis->suggested_materials ?? [];
+            if (is_array($analysisMaterials)) {
+                foreach ($analysisMaterials as $material) {
+                    $quantity = floatval($material['estimated_quantity'] ?? 1);
+                    $unitCost = floatval($material['estimated_unit_cost_php'] ?? 0);
+                    $analysisTotal += $quantity * $unitCost;
+                }
+            }
+        }
+
+        $totalCost = $calculatedTotal > 0 ? $calculatedTotal : ($analysisTotal > 0 ? $analysisTotal : ($booking->total_quoted ?? 0));
+
         return view('client.booking-analysis', [
             'booking' => $booking,
-            'estimatedTotal' => $booking->total_quoted ?? $this->estimateQuote($booking->event_type),
+            'totalCost' => $totalCost,
             'analysis' => $analysis,
+            'analysisMaterials' => $analysisMaterials,
+            'items' => $items,
             'paymentStatus' => $payment?->status,
             'paymentReference' => $payment?->reference_number,
             'paymentMethod' => $payment?->payment_type,

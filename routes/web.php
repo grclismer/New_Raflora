@@ -152,3 +152,19 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // Admin Settings: System preferences and admin controls
     Route::get('/settings', fn () => view('admin.settings'))->name('admin.settings');
 });
+
+#Temporary route for testing Gemini Vision Service
+use App\Services\GeminiVisionService;
+
+Route::get('/test-gemini', function (GeminiVisionService $service) {
+    // Uses the flowaah1.jpg file in your public folder
+    $imagePath = public_path('flowaah1.jpg');
+
+    if (!file_exists($imagePath)) {
+        return response()->json(['error' => 'Image flowaah1.jpg not found in public folder!'], 404);
+    }
+
+    $result = $service->analyzeImageFromPath($imagePath);
+
+    return response()->json($result);
+});

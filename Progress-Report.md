@@ -6,10 +6,10 @@ This document is automatically maintained and updated whenever changes are made 
 
 # Raflora Enterprises - Current Status Report & Roadmap to Deployment
 
-**Last Updated:** 2026-06-18  
+**Last Updated:** 2026-07-21  
 **Project:** Raflora Enterprises Booking & Event Management System  
 **Lead Architect:** Kilo  
-**Current Phase:** Phase 3 - API Controllers & Business Logic 🟡  
+**Current Phase:** Phase 3 - API Controllers & Business Logic 🟡 (40% Complete)  
 
 ---
 
@@ -25,7 +25,7 @@ The project has successfully completed all UI implementation phases. The fronten
 |-------|--------|-----------|
 | Phase 1: Database Schema & Models | 🟢 Complete | 100% |
 | Phase 2: Component Library & UI | 🟢 Complete | 100% |
-| Phase 3: API Controllers & Business Logic | 🟡 In Progress | 15% |
+| Phase 3: API Controllers & Business Logic | 🟡 In Progress | 40% |
 | Phase 4: Testing & Integration | 🟠 Pending | 0% |
 | Phase 5: Deployment & Optimization | 🟠 Pending | 0% |
 
@@ -72,59 +72,56 @@ The project has successfully completed all UI implementation phases. The fronten
 
 ---
 
-#### Phase 3: API Controllers & Business Logic 🟡 In Progress
+#### Phase 3: API Controllers & Business Logic 🟡 In Progress (40%)
 
-**Current Focus: Model Relationships & Fillable Attributes**
+**Current Focus: Authentication Complete, Booking Workflow, Admin Module Implementation**
 
 | Component | Status | Completion % | Notes |
 |-----------|--------|---|---|
-| User Model Relationships | ✅ Complete | 100% | All 8 relationships (bookings, calendarEvents, inventoryTransactions, recordedPayments, inspectedReturns, meetings, presentations, quotationChanges) |
-| Booking Model Relationships | ✅ Complete | 100% | All 11 relationships (client, handledBy, quotations, payments, returns, aiAnalyses, meetings, presentations, calendarEvents, inventoryTransactions, inventoryItems) |
-| Inventory Model Relationships | ✅ Complete | 100% | All 4 relationships (inventoryTransactions, returnItems, bookings pivot, returns pivot) |
-| AiAnalysisResult Model | ✅ Complete | 100% | Relationships and casts implemented |
-| AssetReturn Model | ✅ Complete | 100% | Relationships and pivot implemented |
-| Quotation Model | ✅ Complete | 100% | Relationships and casts implemented |
-| Setting Model | ✅ Complete | 100% | Key-value store with static accessors |
-| Client Model (NEW) | ✅ Created | 100% | hasMany Booking relationship |
-| InventoryTransaction Model (NEW) | ✅ Created | 100% | Audit trail relationships |
-| QuotationHistory Model (NEW) | ✅ Created | 100% | Change tracking relationships |
-| Payment Model (NEW) | ✅ Created | 100% | Payment tracking relationships |
-| CalendarEvent Model (NEW) | ✅ Created | 100% | Scheduling relationships |
-| Meeting Model (NEW) | ✅ Created | 100% | Meeting management relationships |
-| Presentation Model (NEW) | ✅ Created | 100% | File management relationships |
-| ReturnItem Model (NEW) | ✅ Created | 100% | Pivot model for return items |
-| AuthController | ✅ Complete | 100% | Full authentication system implemented |
-| BookingController | 🟡 In Progress | 55% | Booking creation, history, and analysis flow implemented |
-| InventoryController | 🟠 Pending | 0% | Stock management, transactions |
-| AdminController | 🟠 Pending | 0% | Module business logic |
-| FormRequests & Validation | 🟡 In Progress | 50% | LoginRequest, RegisterRequest, BookingRequest added |
-| API Routes | 🟠 Pending | 0% | RESTful endpoints for all resources |
+| **Models (All 15)** | ✅ Complete | 100% | All models with relationships, casts, fillables configured |
+| **AuthController** | ✅ Complete | 100% | Login, register, logout, password reset with email |
+| **Client BookingController** | ✅ Complete | 90% | CRUD (create, index, store, analysis, history), quotation accept, payment reference |
+| **Admin BookingController** | ✅ In Progress | 70% | Basic CRUD, status updates, payment verification, decline functionality |
+| **Form Requests & Validation** | ✅ Complete | 100% | LoginRequest, RegisterRequest, BookingRequest implemented |
+| **Routes (web.php)** | ✅ Mostly Complete | 85% | Client & Admin routes wired, auth middleware applied |
+| **AdminMiddleware** | ✅ Complete | 100% | Role-based access control for admin/staff routes |
+| **InventoryController** | 🟠 Pending | 0% | Stock management, inventory transactions |
+| **PaymentController** | 🟠 Pending | 0% | Payment processing, payment verification |
+| **ReturnController** | 🟠 Pending | 0% | Asset return tracking, return item management |
+| **QuotationController** | 🟠 Pending | 0% | Quotation management, price updates |
+| **ClientController** | 🟠 Pending | 0% | Client management and records |
+| **ReportController** | 🟠 Pending | 0% | Reports and audit logs |
+| **SettingsController** | 🟠 Pending | 0% | System configuration |
+| **API Documentation** | 🟠 Pending | 0% | OpenAPI/Swagger documentation |
 
-**Phase 3 Progress: 50% (Model relationships 100% complete, Auth completed, booking workflow started)**
+**Phase 3 Progress: 40% (Models 100%, Auth 100%, Booking workflow 80%, remaining controllers pending)**
 
-**Recent Completion (2026-06-19):**
-- ✅ LoginRequest.php created with email/password/remember validation
-- ✅ RegisterRequest.php created with name/email/password_confirmation validation
-- ✅ AuthController.php implemented with full authentication logic (login, register, logout, showForgotPassword)
-- ✅ BookingRequest.php and BookingController.php created with booking persistence flow
-- ✅ routes/web.php updated to wire booking creation and analysis routes
-- ✅ Booking analysis view updated to display the stored booking summary
-- ✅ Password reset flow implemented with PHPMailer and Gmail SMTP
-- ✅ Reset token expiration note added to email template (60-minute expiry)
-- ✅ AdminMiddleware.php created for role-based access control
-- ✅ bootstrap/app.php updated with AdminMiddleware registration
-- ✅ Client routes organized under /client prefix with auth middleware
-- ✅ Admin routes organized under /admin prefix with auth + admin middleware
+**Recent Completion (2026-07-21):**
+- ✅ LoginRequest.php & RegisterRequest.php with email/password validation
+- ✅ AuthController.php with full authentication (login, register, logout, password reset)
+- ✅ BookingRequest.php & BookingController.php (client) - CRUD & analysis flow
+- ✅ Admin BookingController.php with booking status management & payment verification
+- ✅ Password reset flow with PHPMailer & Gmail SMTP (60-minute expiry)
+- ✅ AdminMiddleware.php for role-based access control
+- ✅ routes/web.php fully wired with client/admin route groups
+- ✅ Client account settings with profile image upload & password nge
+- ✅ Admin booking show/update with status transitions & admin notes
+- ✅ Payment verification workflow in admin booking management
 
 **Current Capabilities:**
-- Real session-based authentication (replacing mock UI auth from Phase 2)
-- Email validation against existing users
-- Password hashing with Laravel's Hash facade
-- "Remember me" session extension
-- Role-based admin/staff dashboard redirection
-- Proper session regeneration for security
+- ✅ Session-based authentication with role-based access
+- ✅ Email validation, password hashing, "Remember me" functionality
+- ✅ Client booking lifecycle: create → analysis → quotation acceptance → payment reference
+- ✅ Admin booking management: review → quotation → verify payment → status updates
+- ✅ Email notifications for booking status changes
+- ✅ File upload for profile images & inspiration images
+- ✅ Account settings management (profile, email, password, address)
 
-**Next Priority:** Build BookingController and quotation management (3-5 days)
+**Next Priority:** 
+1. Inventory Controller & Management (2-3 days)
+2. Payment processing workflow (2-3 days)
+3. Return/Asset tracking (2 days)
+4. Reports & Audit logs (2 days)
 
 ### 1.4 Key Achievements
 
@@ -220,7 +217,34 @@ The project has successfully completed all UI implementation phases. The fronten
    - Status: 0%
    - Timeline: 2-3 days after controllers complete
    - Estimated Start: Early July
+---
 
+## 1.5 Recent Gemini / Booking Fixes (Log of Major Changes)
+
+### 1.5.1 GeminiVisionService Improvements
+- Updated active Gemini fallback models to:
+  - `gemini-3.5-flash`
+  - `gemini-3.1-flash-lite`
+  - `gemini-2.5-flash`
+  - `gemini-2.5-flash-lite`
+- Removed deprecated Gemini models (`gemini-1.5-flash`, `gemini-1.5-pro`).
+- Simplified REST payload by removing `tools` and forcing `responseMimeType: application/json`.
+- Added safe GD fallback in `prepareImageForGemini()` to avoid fatal image function errors when GD is unavailable.
+- Added fallback analysis output when all Gemini models fail, including default suggested materials and analysis notes.
+
+### 1.5.2 BookingController Fixes
+- Added raw Gemini output logging to trace responses and failures in `storage/logs/laravel.log`.
+- Hardened pricing calculation so total is explicitly computed from `suggested_materials`:
+  - `quantity * estimated_unit_cost_php`
+  - fallback to `estimated_unit_cost` when needed.
+- Ensured the booking process persists default AI-suggested material fallback instead of leaving quotation at `₱0.00`.
+
+### 1.5.3 Result
+- Prevents empty quotation totals when Gemini parsing or model availability fails.
+- Reduces failure surface on unsupported PHP environments (missing GD image functions).
+- Preserves booking quotation flow with a default estimate if AI analysis is unavailable.
+
+---
 **Phase 3 Milestones:**
 - ✅ Day 1 (2026-06-18): Model relationships 100% complete
 - 🟡 Days 2-5 (2026-06-19 to 2026-06-23): Authentication system
@@ -257,41 +281,132 @@ The project has successfully completed all UI implementation phases. The fronten
 
 ---
 
-## 3. Next Immediate Actions
+## 3. Gap Analysis - What We're Still Lacking
 
-Based on the current status, the recommended immediate next steps are:
+Based on comprehensive project analysis (2026-07-21), the following critical components are **NOT YET IMPLEMENTED** and are required for Phase 3 completion:
 
-1. **Complete Model Relationships (Priority: CRITICAL - 1 week)**
-   - Add hasMany, belongsTo, belongsToMany relationship methods to all 15 models
-   - Define fillable attributes and hidden fields for mass assignment protection
-   - Configure casts for type conversion (especially JSON columns for AI responses and inventory transactions)
-   - Add relationship methods: User hasMany Booking, Booking belongsTo Client, Booking belongsToMany InventoryItem (via booking_items), etc.
+### 🔴 **CRITICAL - Required for Core Functionality (0% Complete)**
 
-2. **Begin Phase 3: Build Authentication System (Priority: HIGH - 1 week)**
-   - Implement AuthController (login, register, logout with real session management)
-   - Create LoginRequest and RegisterRequest form validation classes
-   - Wire login form to use Laravel's Auth::attempt() instead of mock UI auth
-   - Test role-based middleware (admin, staff, client) on protected routes
+| Component | Status | Impact |
+|-----------|--------|--------|
+| **Inventory Management System** | ❌ InventoryController not created; stock tracking, low-stock alerts missing | Admin cannot manage product inventory |
+| **Payment Processing Workflow** | ❌ PaymentController not created; payment verification incomplete | Clients cannot pay; no transaction processing |
+| **Return/Asset Tracking** | ❌ ReturnController not created; damage assessment logic missing | Post-event returns not tracked; no damage charges |
+| **Quotation Management** | ❌ QuotationController not created; quote reconfirmation missing | Quotes purely manual; no pricing history |
+| **Reports & Audit Logging** | ❌ ReportController not created; activity logging missing | No business intelligence; no audit trail |
 
-3. **Start Booking Workflow Implementation (Priority: HIGH - 1-2 weeks)**
-   - Implement BookingController with full CRUD methods
-   - Add status transition logic (inquiry → quotation_sent → downpayment_received → in_progress → completed/cancelled)
-   - Create BookingRequest form validation
-   - Wire booking creation/edit forms to controller actions
-   - Implement pagination and filtering for booking lists
+### 🟡 **HIGH PRIORITY - Needed for Complete Workflow**
 
-4. **Set Up Database Seeding (Priority: MEDIUM - 2-3 days)**
-   - Create database seeders for test data (admin user, sample clients, inventory items)
-   - Seed initial categories and settings for inventory management
-   - Prepare sample bookings for testing workflow
+| Component | Status | Impact |
+|-----------|--------|--------|
+| **Gemini AI Integration** | ⚠️ API calls not implemented; suggestions hard-coded | AI analysis feature non-functional |
+| **Email Notifications** | ⚠️ Only 1 of 8+ notification types created | Clients not notified of status changes |
+| **Form Validation** | ⚠️ 50% complete; missing 7+ Request classes | Form data not validated; inconsistent errors |
+| **Admin Module Controllers** | ❌ ClientController, SettingsController missing | Admin cannot manage clients/settings |
+| **User & Role Management** | ⚠️ 30% complete; no user creation UI | Limited user management capabilities |
 
-5. **Begin Test Suite Setup (Priority: MEDIUM - ongoing)**
-   - Create PHPUnit test directory structure and configuration
-   - Write first tests for User authentication flow
-   - Set up continuous testing during development
+### 🟠 **MEDIUM PRIORITY - Nice-to-Have Enhancements**
 
-**Timeline to Phase 3 Completion:** Estimated 2-3 weeks starting from today (2026-06-18)  
-**Next Major Milestone:** Phase 3 (API Controllers) complete and all CRUD operations functional
+| Component | Status | Impact |
+|-----------|--------|--------|
+| **Database Seeders** | ❌ No test data generation | Manual data entry required for testing |
+| **API Documentation** | ❌ No OpenAPI/Swagger docs | External integrations difficult |
+| **Testing Suite** | ❌ No unit/feature tests written | No automated testing; manual QA only |
+| **Security Hardening** | ⚠️ Rate limiting & fine-grained authorization missing | Vulnerable to rate-based attacks |
+
+---
+
+## 4. Implementation Priority Roadmap (Next 5 Weeks)
+
+### Week 1: Core Financial Workflows (Jul 24-30)
+1. **Complete Admin Booking Workflow** (2-3 days) - 70% done, finish status transitions & email notifications
+2. **Inventory Controller** (2-3 days) - Required for all other workflows
+3. **Payment Processing System** (2-3 days) - Revenue tracking & transaction processing
+
+**Checkpoint:** All booking & payment workflows functional
+
+### Week 2: Asset & Quote Management (Jul 31 - Aug 6)
+1. **Return/Asset Tracking** (2 days) - Post-event workflow
+2. **Quotation Management** (2 days) - Quote reconfirmation & history
+3. **Gemini AI Integration** (2 days) - Real API calls for image analysis
+
+**Checkpoint:** All financial workflows complete
+
+### Week 3: Reporting & Admin Tools (Aug 7-13)
+1. **Reports & Audit Logging** (2 days) - KPI dashboard & activity logging
+2. **Email Notifications** (2 days) - Complete notification system
+3. **Admin Module Controllers** (2 days) - Client & Settings management
+
+**Checkpoint:** All admin functionality complete
+
+### Week 4: Form Validation & Polish (Aug 14-20)
+1. **Complete Form Validation** (2 days) - All Request classes + error messages
+2. **Security & Authorization** (2 days) - Rate limiting & policy checks
+3. **Database Seeders** (1 day) - Test data generation
+
+**Checkpoint:** All forms validated, system hardened
+
+### Week 5: Testing & Final Polish (Aug 21-25)
+1. **Testing Suite** (2 days) - Unit & feature tests
+2. **Error Handling** (1 day) - User-friendly error messages
+3. **Documentation & Deployment Prep** (2 days) - API docs, deployment checklist
+
+**Phase 3 Completion Target: 2026-08-25**
+
+---
+
+## 5. Critical Path (What Unlocks Everything Else)
+
+**Must Complete These First:**
+1. ✅ **Models & Relationships** - DONE (Phase 1)
+2. ✅ **Authentication** - DONE (Phase 3 - Week 1)
+3. ✅ **Booking Workflow** - 80% DONE (Phase 3 - Week 1)
+4. 🟠 **Inventory System** - REQUIRED (blocks all operations)
+5. 🟠 **Payment Processing** - REQUIRED (blocks bookings completion)
+6. 🟠 **Return Tracking** - REQUIRED (post-event management)
+
+Once these 3 are done (by Aug 6), most of the business value is unlocked.
+
+---
+
+## 6. Next Immediate Actions
+
+Based on the current status (Phase 3 - 40% complete), the recommended immediate next steps are:
+
+### This Week (Jul 21-27)
+
+**Priority 1: Complete Admin Booking Workflow** (2-3 days)
+   - Finish status transition logic (pending → quotation_sent → payment_pending → completed/cancelled)
+   - Add proper email notifications for all status changes
+   - Add admin notes/comments to bookings
+   - Wire all remaining booking action buttons to controller methods
+   - **Owner:** [Assign developer]
+   - **Deadline:** 2026-07-24
+
+**Priority 2: Create InventoryController** (2-3 days)
+   - Build full CRUD methods: index(), show(), store(), update(), destroy()
+   - Implement stock level validation and low-stock alerts
+   - Create InventoryRequest form validation
+   - Add inventory transaction logging for audit trail
+   - Wire /admin/inventory routes to controller
+   - **Owner:** [Assign developer]
+   - **Deadline:** 2026-07-27
+
+### Next Week (Jul 28 - Aug 3)
+
+**Priority 3: Payment Processing System** (2-3 days)
+   - Create PaymentController with store(), verify(), decline() methods
+   - Implement payment reference submission workflow
+   - Add payment verification logic in admin panel
+   - Create PaymentRequest form validation
+   - **Owner:** [Assign developer]
+   - **Deadline:** 2026-07-30
+
+### Following Week (Aug 4-10)
+
+**Priority 4: Return/Asset Tracking** (2 days)
+**Priority 5: Quotation Management** (2 days)
+**Priority 6: Gemini AI Integration** (2 days)
 
 ---
 

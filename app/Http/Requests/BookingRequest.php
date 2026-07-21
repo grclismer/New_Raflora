@@ -24,6 +24,7 @@ class BookingRequest extends FormRequest
         return [
             'event_type' => ['required', 'string', 'in:wedding,birthday,corporate'],
             'event_date' => ['required', 'date', 'after_or_equal:today'],
+            'event_time' => ['required', 'date_format:H:i'],
             'venue' => ['required', 'string', 'max:500'],
             'special_requests' => ['nullable', 'string', 'max:2000'],
             'inspiration_image' => ['nullable', 'image', 'max:4096'],
@@ -41,6 +42,8 @@ class BookingRequest extends FormRequest
             'event_date.required' => 'The event date is required.',
             'event_date.date' => 'The event date must be a valid date.',
             'event_date.after_or_equal' => 'The event date cannot be in the past.',
+            'event_time.required' => 'The event time is required.',
+            'event_time.date_format' => 'The event time must be a valid time in 24-hour format (HH:MM).',
             'venue.required' => 'Event venue is required.',
             'venue.max' => 'The venue description may not exceed 500 characters.',
             'special_requests.max' => 'Special requests may not exceed 2000 characters.',

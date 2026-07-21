@@ -1,19 +1,23 @@
-⚠️ **AUTOMATED DOCUMENTATION - AUTO-UPDATES WITH SYSTEM CHANGES**
+📋 **PLANNING & REFERENCE DOCUMENT**
 
-This document is automatically maintained and updated whenever changes are made to the Raflora Enterprises system. Every implementation, bug fix, feature addition, and phase progression is reflected here in real-time. **Do not edit manually unless making administrative updates.** For database architecture reference and detailed entity specifications, use this document as authoritative.
+This document is the planning and reference guide for the Raflora Enterprises system. It contains project overview, approved UI modules, comprehensive database architecture specifications, and developer guidelines. **For current status, completion updates, and timelines, see Progress-Report.md.**
 
 ---
 
-# Raflora Enterprises - UI Planning & Implementation Tracker
+# Raflora Enterprises - Planning & Database Architecture Reference
 
-**Last Updated:** 2026-06-18  
+**Last Updated:** 2026-07-21  
 **Project:** Raflora Enterprises Booking & Event Management System  
-**Current Phase:** Phase 3 - API Controllers & Business Logic 🟡
+**Reference Document For:** Database schema, entity specifications, tech stack, approved UI modules
 
 ## Purpose
-This file is the single source of truth for the Raflora Enterprises project database architecture, implementation progress, and detailed entity specifications. It is automatically kept current as the project evolves.
+This document is the **planning and reference guide** for the Raflora Enterprises project. It contains:
+- Project overview, scope, and tech stack
+- Approved UI modules and features
+- Complete database architecture (entity specifications, relationships, enums)
+- Developer guidelines and reference material
 
-**Location:** `C:\Users\lismerpalce\OneDrive\Documents\Capstone2\Raflora2\rafloraenterprises\Planning-documentation.md`
+**For current project status, phase completion, timelines, and what's missing, see [Progress-Report.md](Progress-Report.md)**
 
 ---
 
@@ -60,71 +64,11 @@ This file is the single source of truth for the Raflora Enterprises project data
 
 ---
 
-## 3. Development Phases & Architecture
+## 3. Database Architecture & Entity Reference
 
-### Overview
-The Raflora Enterprises system is built as a three-tier Laravel MVC application with the following phases:
+**Note:** For current phase status, completion updates, timelines, and what's still needed, see [Progress-Report.md](Progress-Report.md) instead.
 
-- **Phase 1: Database Schema & Models** ✅ COMPLETE (2026-06-18)
-- **Phase 2: Component Library & UI** ✅ COMPLETE (2026-06-06)
-- **Phase 3: API Controllers & Business Logic** 🟡 IN PROGRESS
-- **Phase 4: Testing & Integration** 🟠 PENDING
-- **Phase 5: Production Deployment** 🟠 PENDING
-
-### Phase 1: Database Schema & Models ✅ Complete
-
-**Status:** All 15 core entity tables designed, migrated, and tested with foreign key constraints and referential integrity.
-
-**Key Deliverables:**
-- 15 database tables with proper relationships and constraints
-- Eloquent models for all entities with fillable attributes
-- Pivot tables for many-to-many relationships (booking_items, return_items)
-- Timestamps, cascading deletes, and soft deletes where appropriate
-
-**Database Entity Overview:**
-- **Core Entities:** User, Client, Booking, InventoryItem, Return
-- **Related Entities:** Quotation, Payment, AiAnalysisResult, CalendarEvent, Meeting, Presentation
-- **Audit & History:** InventoryTransaction, QuotationHistory
-
-### Phase 2: Component Library & UI ✅ Complete
-
-**Status:** All 21 UI pages and components fully implemented with Tailwind CSS v4 and responsive design.
-
-**Pages Completed:**
-- Auth (login, register, forgot password)
-- Client Portal (dashboard, booking CRUD, analysis, settings)
-- Admin/Staff Portal (9 business modules)
-- Marketing (home, about, gallery)
-
-**Key Features:**
-- Reusable Blade components (app-layout, admin-layout, navbar, avatar-dropdown)
-- Route-aware navigation with scroll links on homepage
-- Status filters and action modals
-- Mock authentication with session management
-
-### Phase 3: API Controllers & Business Logic 🟡 In Progress (15%)
-
-**Status:** Model relationships 100% complete (2026-06-18); authentication and booking workflow are now implemented.
-
-**Completed Work:**
-- ✅ All 15 models with full relationship definitions implemented
-- ✅ 8 new models created (Client, InventoryTransaction, QuotationHistory, Payment, CalendarEvent, Meeting, Presentation, ReturnItem)
-- ✅ All fillable attributes and casts properly configured
-- ✅ All pivot table relationships configured with withPivot()
-- ✅ AuthController, BookingRequest, and BookingController created
-- ✅ Client booking history and AI analysis flow now display actual booking data and quotation totals
-- ✅ Password reset email flow created with Gmail SMTP/PHPMailer and 60-minute token expiry
-
-**Current Work:**
-- 🟡 Refining booking workflow and analysis flow
-- 🟠 Creating payment and inventory controllers
-- 🟠 Wiring all API routes
-
-**Timeline:** 2-3 weeks to completion (currently 15% through Phase 3)
-
----
-
-## 4. Database Architecture & Entity Reference
+This section contains detailed database entity specifications for developer reference.
 
 ### Complete Database Schema Overview
 
@@ -817,11 +761,16 @@ inquiry → quotation_sent → downpayment_received → meeting_completed → pr
 
 ---
 
-## 8. Notes
+## 8. Developer Guidelines & Notes
 
-- **Database is the Source of Truth:** All entity definitions, relationships, and constraints are derived from the actual database schema (shown in ERD images)
-- **This file evolves with the project:** Update whenever phases progress or requirements change
-- **Synchronization:** Progress-Report.md and Planning-documentation.md are kept in sync to prevent confusion
-- **Backend logic and role recognition:** Developer responsibility; controller implementations will use the model relationships defined in Phase 1
-- **Two-way reference:** Use Planning-documentation.md for detailed entity reference; use Progress-Report.md for status and roadmap
-- **Ready for Phase 3:** All database foundations are in place; API development can begin immediately
+- **Database is the Source of Truth:** All entity definitions, relationships, and constraints in this document are derived from the actual database schema
+- **Entity Reference Purpose:** Use this section for understanding data structures and relationships when building controllers or forms
+- **Status & Timelines:** For current phase status, completion percentages, timelines, and what's still needed → see **Progress-Report.md**
+- **Gap Analysis:** For detailed breakdown of what components are missing → see **Progress-Report.md Section 3 "Current Status Report"**
+- **Implementation Roadmap:** For week-by-week priorities and estimated timelines → see **Progress-Report.md Section 2 "Roadmap to Deployment"**
+- **Backend Logic:** Developer responsibility to implement controllers using the model relationships defined in this document
+- **Two-way Reference:**
+  - Planning-documentation.md = Database architecture & entity specifications (detailed technical reference)
+  - Progress-Report.md = Status, completion %, timelines, next actions, gaps (executive summary)
+- **Updates:** When starting new work, consult Progress-Report.md for current priority order; reference this document for database structure
+- **Critical Path:** Inventory → Payments → Returns (these three unlock most business value and enable other workflows)

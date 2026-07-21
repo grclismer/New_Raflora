@@ -19,6 +19,7 @@ class Booking extends Model
         'handled_by',
         'event_type',
         'event_date',
+        'event_time',
         'event_size',
         'venue',
         'special_requests',
@@ -39,6 +40,7 @@ class Booking extends Model
      */
     protected $casts = [
         'event_date' => 'date',
+        'event_time' => 'string',
         'downpayment_date' => 'date',
         'price_valid_until' => 'date',
         'suggested_procurement_date' => 'date',
