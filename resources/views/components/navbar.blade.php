@@ -30,11 +30,11 @@
                 <!-- Direct route links on other pages -->
                 <a href="{{ route('about') }}" class="hover:underline font-semibold">ABOUT</a>
             @endif
+            <a href="{{ route('booking.start') }}" class="hover:underline font-semibold">BOOKING</a>
             @if(auth()->check() || session('dev_user'))
-                <a href="{{ route('bookings.create') }}" class="hover:underline">BOOKING</a>
                 <x-avatar-dropdown />
             @else
-                <a href="{{ route('login') }}" class="hover:underline">LOG IN</a>
+                <a href="{{ route('login') }}" class="hover:underline font-semibold">LOG IN</a>
             @endif
         </div>
 
@@ -58,8 +58,8 @@
             @else
                 <a href="{{ route('gallery') }}" class="font-semibold">GALLERY</a>
             @endif
+            <a href="{{ route('booking.start') }}" class="font-semibold">BOOKING</a>
             @if(auth()->check() || session('dev_user'))
-                <a href="{{ route('bookings.create') }}" class="font-semibold">BOOKING</a>
                 <a href="{{ route('bookings') }}" class="font-semibold">MY BOOKINGS</a>
                 <a href="{{ route('account-settings') }}" class="font-semibold">ACCOUNT SETTINGS</a>
                 <form method="POST" action="{{ route('logout') }}" class="inline">

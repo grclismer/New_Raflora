@@ -37,7 +37,11 @@ class BookingController extends Controller
      */
     public function create(): View
     {
-        return view('client.booking-create');
+        $packages = \App\Models\Package::where('is_active', true)->get();
+
+        return view('client.booking-create', [
+            'packages' => $packages,
+        ]);
     }
 
     /**
@@ -49,6 +53,7 @@ class BookingController extends Controller
 
         $validated = $request->validated();
         $client = $this->resolveClient();
+        $bookingType = $request->input('booking_type', 'custom_ai');
 
         $inspirationImagePath = null;
         if ($request->hasFile('inspiration_image')) {
@@ -58,20 +63,38 @@ class BookingController extends Controller
         $priceValidUntil = Carbon::now()->addDays(7)->toDateString();
         $suggestedProcurement = Carbon::parse($validated['event_date'])->subDays(7)->toDateString();
 
+        $selectedPackage = null;
+        if ($bookingType === 'preset' && !empty($validated['package_id'])) {
+            $selectedPackage = \App\Models\Package::find($validated['package_id']);
+        }
+
+        $specialRequests = $validated['special_requests'] ?? '';
+        if ($selectedPackage) {
+            $specialRequests = trim($specialRequests . "\nSelected Package: " . $selectedPackage->title . " (₱" . number_format($selectedPackage->price, 2) . ")");
+        }
+
         $booking = Booking::create([
             'client_id' => $client?->id,
             'handled_by' => null,
             'event_type' => $validated['event_type'],
             'event_date' => $validated['event_date'],
-            'event_time' => $validated['event_time'],
+            'event_time' => $validated['event_time'] ?? null,
             'venue' => $validated['venue'],
-            'special_requests' => $validated['special_requests'] ?? null,
-            'inspiration_image' => $inspirationImagePath,
+            'special_requests' => $specialRequests,
+            'inspiration_image' => $inspirationImagePath ?? ($selectedPackage?->image_path),
             'status' => 'pending',
-            'total_quoted' => 0,
+            'total_quoted' => $selectedPackage ? $selectedPackage->price : 0,
+            'raw_materials_sum' => $selectedPackage ? $selectedPackage->price : 0,
+            'multiplier' => 1.0,
+            'final_quoted_price' => $selectedPackage ? $selectedPackage->price : 0,
             'price_valid_until' => $priceValidUntil,
             'suggested_procurement_date' => $suggestedProcurement,
         ]);
+
+        if ($selectedPackage) {
+            return redirect()->route('bookings.analysis', ['booking' => $booking->id])
+                ->with('success', 'Package booking request submitted successfully!');
+        }
 
         // Attempt real Gemini vision analysis; fall back to simulated if it fails
         try {

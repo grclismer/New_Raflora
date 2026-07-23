@@ -1,4 +1,4 @@
-﻿<x-app-layout title="My Bookings">
+<x-app-layout title="My Bookings">
     <x-client-layout active="bookings">
         <section class="section-card p-10 max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
@@ -6,7 +6,7 @@
                     <h1 class="page-title">My Bookings</h1>
                     <p class="section-subtitle mt-3">Manage your event requests, view quotations, and track booking status from one place.</p>
                 </div>
-                <a href="{{ route('bookings.create') }}" class="btn-primary">New Booking</a>
+                <a href="{{ route('booking.start') }}" class="btn-primary">New Booking</a>
             </div>
 
             <div class="overflow-x-auto rounded-3xl border border-white/10 bg-white/5 p-5">

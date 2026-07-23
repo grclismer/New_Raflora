@@ -16,6 +16,23 @@ Route::get('/gallery', fn () => view('gallery'))->name('gallery');
 // About Page: Dedicated about page
 Route::get('/about', fn () => view('about'))->name('about');
 
+// Dynamic Booking Route
+Route::get('/booking/start', function () {
+    if (Auth::check()) {
+        return redirect()->route('bookings.create');
+    }
+    return redirect()->route('guest.booking.create');
+})->name('booking.start');
+
+// Public Packages Route
+Route::get('/packages', [\App\Http\Controllers\PackageController::class, 'index'])->name('packages.index');
+
+// Guest Booking Routes
+Route::get('/guest/booking', [\App\Http\Controllers\GuestBookingController::class, 'create'])->name('guest.booking.create');
+Route::post('/guest/booking', [\App\Http\Controllers\GuestBookingController::class, 'store'])->name('guest.booking.store');
+Route::get('/guest/booking/analysis/{booking}', [\App\Http\Controllers\GuestBookingController::class, 'analysis'])->name('guest.booking.analysis');
+
+
 // Authentication Routes: Real session-based authentication
 Route::middleware('guest')->group(function () {
     // Login Routes
@@ -127,6 +144,10 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
             'recentBookings' => Booking::with('client')->latest()->limit(5)->get(),
         ]);
     })->name('admin.dashboard');
+
+    // Admin Packages
+    Route::resource('packages', \App\Http\Controllers\Admin\PackageController::class)->except(['create', 'show', 'edit']);
+
     // Admin Bookings: Booking management listing
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings');
     // Admin Booking Review: Specific booking detail view

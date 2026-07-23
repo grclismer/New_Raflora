@@ -34,6 +34,11 @@ class Booking extends Model
         'raw_materials_sum',
         'multiplier',
         'final_quoted_price',
+        // Guest booking fields
+        'guest_name',
+        'guest_email',
+        'guest_phone',
+        'guest_address',
     ];
 
     /**

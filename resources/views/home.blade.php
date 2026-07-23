@@ -8,11 +8,7 @@
             <div class="max-w-6xl mx-auto relative z-10 h-full flex items-center">
                 <div class="px-8 md:px-0 w-full md:w-2/3 text-white">
                     <h1 class="serif text-5xl md:text-6xl leading-tight font-bold">Creating Beautiful &<br> Inspiring <span class="text-4xl md:text-6xl italic">EVENTS</span></h1>
-                    @if(auth()->check() || session('dev_user'))
-                        <a href="{{ route('bookings.create') }}" class="mt-8 inline-block bg-white text-gray-900 font-semibold px-6 py-3 rounded shadow uppercase">Book now!</a>
-                    @else
-                        <a href="{{ route('login') }}" class="mt-8 inline-block bg-white text-gray-900 font-semibold px-6 py-3 rounded shadow uppercase">Book now!</a>
-                    @endif
+                    <a href="{{ route('booking.start') }}" class="mt-8 inline-block bg-white text-gray-900 font-semibold px-6 py-3 rounded shadow uppercase">Book now!</a>
                 </div>
             </div>
             <svg class="absolute -bottom-1 left-0 w-full" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0,64L60,53.3C120,43,240,21,360,10.7C480,0,600,0,720,10.7C840,21,960,43,1080,58.7C1200,75,1320,85,1380,90.7L1440,96L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path></svg>

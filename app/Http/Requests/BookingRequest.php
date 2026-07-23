@@ -22,12 +22,14 @@ class BookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_type' => ['required', 'string', 'in:wedding,birthday,corporate'],
+            'booking_type' => ['nullable', 'string', 'in:custom_ai,preset'],
+            'package_id' => ['nullable', 'exists:packages,id'],
+            'event_type' => ['required', 'string', 'in:wedding,birthday,corporate,other'],
             'event_date' => ['required', 'date', 'after_or_equal:today'],
-            'event_time' => ['required', 'date_format:H:i'],
+            'event_time' => ['nullable', 'date_format:H:i'],
             'venue' => ['required', 'string', 'max:500'],
             'special_requests' => ['nullable', 'string', 'max:2000'],
-            'inspiration_image' => ['nullable', 'image', 'max:4096'],
+            'inspiration_image' => ['nullable', 'image', 'max:5120'],
         ];
     }
 

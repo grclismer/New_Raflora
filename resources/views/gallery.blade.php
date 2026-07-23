@@ -64,11 +64,7 @@
                 <!-- Call to Action -->
                 <div class="text-center mt-16">
                     <p class="text-gray-200 text-lg mb-6">Interested in creating your perfect event?</p>
-                    @if(auth()->check() || session('dev_user'))
-                        <a href="{{ route('bookings.create') }}" class="inline-block bg-white text-gray-900 font-semibold px-10 py-4 rounded shadow-lg uppercase hover:bg-gray-100 transition">Create Booking</a>
-                    @else
-                        <a href="{{ route('login') }}" class="inline-block bg-white text-gray-900 font-semibold px-10 py-4 rounded shadow-lg uppercase hover:bg-gray-100 transition">Get Started</a>
-                    @endif
+                    <a href="{{ route('booking.start') }}" class="inline-block bg-white text-gray-900 font-semibold px-10 py-4 rounded shadow-lg uppercase hover:bg-gray-100 transition">Create Booking</a>
                 </div>
             </div>
         </div>
