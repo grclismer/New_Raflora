@@ -31,6 +31,9 @@ class Booking extends Model
         'price_valid_until',
         'suggested_procurement_date',
         'cancellation_reason',
+        'raw_materials_sum',
+        'multiplier',
+        'final_quoted_price',
     ];
 
     /**

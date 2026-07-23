@@ -67,7 +67,7 @@ class BookingController extends Controller
             'venue' => $validated['venue'],
             'special_requests' => $validated['special_requests'] ?? null,
             'inspiration_image' => $inspirationImagePath,
-            'status' => 'quotation_sent',
+            'status' => 'pending',
             'total_quoted' => 0,
             'price_valid_until' => $priceValidUntil,
             'suggested_procurement_date' => $suggestedProcurement,
@@ -158,7 +158,10 @@ class BookingController extends Controller
                     }
 
                     // Update booking total_quoted based on AI materials
-                    $booking->total_quoted = $totalCost;
+                    $booking->raw_materials_sum = $totalCost;
+                    $booking->multiplier = 3.0;
+                    $booking->final_quoted_price = $totalCost * 3.0;
+                    $booking->total_quoted = $booking->final_quoted_price;
                     $booking->save();
                 }
             } else {
@@ -174,6 +177,9 @@ class BookingController extends Controller
                 'analyzed_at' => Carbon::now(),
             ]);
 
+            $booking->raw_materials_sum = 0;
+            $booking->multiplier = 3.0;
+            $booking->final_quoted_price = 0;
             $booking->total_quoted = 0;
             $booking->save();
         }
@@ -219,7 +225,7 @@ class BookingController extends Controller
             }
         }
 
-        $totalCost = $calculatedTotal > 0 ? $calculatedTotal : ($analysisTotal > 0 ? $analysisTotal : ($booking->total_quoted ?? 0));
+        $totalCost = $booking->final_quoted_price > 0 ? $booking->final_quoted_price : ($booking->total_quoted ?? 0);
 
         return view('client.booking-analysis', [
             'booking' => $booking,

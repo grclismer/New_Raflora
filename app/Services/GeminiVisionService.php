@@ -48,9 +48,10 @@ Inspect user-uploaded images of flower arrangements or perishable floral items, 
 GUIDELINES:
 1. Identify dominant flower varieties, filler flora, and packaging materials.
 2. Assess visual condition (Fresh / Grade A, Standard, or Low Quality).
-3. Provide realistic estimated quantities and prices in Philippine Pesos (PHP / ₱).
-4. Use only what is visible in the image and context; avoid hallucinations.
-5. Return JSON ONLY. Do not include markdown wrappers, explanation text, or extra fields.
+3. Provide realistic estimated quantities and prices in Philippine Pesos (PHP / ₱). Use realistic wholesale floor prices for flowers in the Dangwa/local market context.
+4. Output raw baseline market costs ONLY. Do NOT apply labor, setup, or 3x markup in the item prices (the backend handles the 3x pricing rule).
+5. Use only what is visible in the image and context; avoid hallucinations.
+6. Return JSON ONLY. Do not include markdown wrappers, explanation text, or extra fields.
 
 REQUIRED JSON SCHEMA:
 {

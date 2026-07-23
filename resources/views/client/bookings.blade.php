@@ -56,8 +56,8 @@
                 </table>
             </div>
         </section>
-    </x-client-layout>
 
+        <script>
             function closeModal(modalId) {
                 document.getElementById(modalId).classList.add('hidden');
             }
@@ -72,13 +72,13 @@
                 closeModal('cancelModal');
             }
 
-            function filterBookings(status) {
+            function filterBookings(status, event) {
                 const rows = document.querySelectorAll('.booking-row');
                 const tabs = document.querySelectorAll('.filter-tab');
-                
+
                 tabs.forEach(tab => tab.classList.remove('active', 'bg-purple-700'));
                 tabs.forEach(tab => tab.classList.add('bg-purple-600'));
-                event.target.classList.add('active', 'bg-purple-700');
+                if (event && event.target) event.target.classList.add('active', 'bg-purple-700');
 
                 rows.forEach(row => {
                     if (status === 'all' || row.classList.contains(status)) {
@@ -89,7 +89,8 @@
                 });
 
                 const visibleRows = document.querySelectorAll('.booking-row:not(.hidden)');
-                document.getElementById('emptyState').classList.toggle('hidden', visibleRows.length > 0);
+                const emptyEl = document.getElementById('emptyState');
+                if (emptyEl) emptyEl.classList.toggle('hidden', visibleRows.length > 0);
             }
         </script>
     </x-client-layout>

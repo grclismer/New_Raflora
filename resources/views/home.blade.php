@@ -28,9 +28,9 @@
                     <div class="md:col-span-2">
                         <h2 class="serif text-3xl md:text-4xl mb-4">ABOUT US</h2>
                         <p class="text-gray-600">We create beautiful floral designs and event setups tailored to each client's vision. Our team handles bookings, material sourcing, and on-site logistics.</p>
-                                    <div class="text-center mt-8 relative z-10">
-                                        <a href="{{ route('about') }}" class="inline-block bg-white text-gray-900 font-semibold px-8 py-3 rounded shadow uppercase hover:bg-gray-100 transition">View Full About</a>
-                                    </div>
+                    </div>
+                    <div class="text-center mt-8 relative z-10">
+                        <a href="{{ route('about') }}" class="inline-block bg-white text-gray-900 font-semibold px-8 py-3 rounded shadow uppercase hover:bg-gray-100 transition">View Full About</a>
                     </div>
                 </div>
             </div>
@@ -50,9 +50,10 @@
                     </div>
                     <div class="bg-white rounded-2xl p-6 shadow-lg">
                         <img src="{{ asset('assets/images/image3.jpg') }}" class="rounded-xl w-full h-48 object-cover" alt="gallery">
-                                    <div class="text-center mt-12 relative z-10">
-                                        <a href="{{ route('gallery') }}" class="inline-block bg-white text-gray-900 font-semibold px-8 py-3 rounded shadow uppercase hover:bg-gray-100 transition">View Full Gallery</a>
-                                    </div>
+                                    
+                    </div>
+                    <div class="text-center mt-12 relative z-10">
+                        <a href="{{ route('gallery') }}" class="inline-block bg-white text-gray-900 font-semibold px-8 py-3 rounded shadow uppercase hover:bg-gray-100 transition">View Full Gallery</a>
                     </div>
                 </div>
             </div>

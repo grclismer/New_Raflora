@@ -47,16 +47,6 @@
             </div>
 
             <div>
-                <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">Operations</p>
-                <a href="{{ route('admin.ai-analysis') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.ai-analysis*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
-                    <i class="fa-solid fa-brain w-5"></i><span>AI Analysis</span>
-                </a>
-                <a href="{{ route('admin.quotations') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.quotations*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
-                    <i class="fa-solid fa-file-invoice-dollar w-5"></i><span>Quotations</span>
-                </a>
-            </div>
-
-            <div>
                 <p class="text-xs uppercase tracking-[0.3em] text-purple-500 mb-2">Clients</p>
                 <a href="{{ route('admin.client-records') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('admin.client-records*') ? 'bg-purple-100 text-purple-800 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700' }}">
                     <i class="fa-solid fa-folder-open w-5"></i><span>Client Records</span>

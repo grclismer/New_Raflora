@@ -52,6 +52,8 @@ class BookingController extends Controller
             'status' => ['required', 'string', 'in:pending,quotation_sent,payment_pending,downpayment_received,completed,declined,cancelled'],
             'special_requests' => ['nullable', 'string', 'max:2000'],
             'admin_note' => ['nullable', 'string', 'max:1000'],
+            'multiplier' => ['nullable', 'numeric', 'min:1'],
+            'final_quoted_price' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $booking->event_type = $data['event_type'];
@@ -61,20 +63,67 @@ class BookingController extends Controller
         $booking->special_requests = $data['special_requests'] ?? $booking->special_requests;
         $booking->handled_by = Auth::id();
 
+        if (isset($data['multiplier'])) {
+            $booking->multiplier = $data['multiplier'];
+        }
+        if (isset($data['final_quoted_price'])) {
+            $booking->final_quoted_price = $data['final_quoted_price'];
+            $booking->total_quoted = $data['final_quoted_price'];
+        }
 
         // Process admin note
         $adminNote = $data['admin_note'] ?? '';
 
         // Process item adjustments if provided and append to admin note
         $items = $request->input('items', []);
+        $newRawMaterialsSum = 0;
+        
         if (!empty($items) && is_array($items)) {
             $lines = [];
             foreach ($items as $it) {
                 $name = $it['item_name'] ?? 'Item';
-                $qty = isset($it['adjusted_quantity']) ? (int)$it['adjusted_quantity'] : null;
-                $unavailable = !empty($it['unavailable']) ? 'Yes' : 'No';
-                $lines[] = "$name — Qty: " . ($qty !== null ? $qty : 'n/a') . " — Unavailable: $unavailable";
+                $qty = isset($it['quantity']) ? (float)$it['quantity'] : (isset($it['adjusted_quantity']) ? (float)$it['adjusted_quantity'] : null);
+                $unavailable = !empty($it['unavailable']) || !empty($it['remove']) ? true : false;
+                
+                $invItem = \App\Models\InventoryItem::where('name', $name)->first();
+                if ($invItem) {
+                    if ($unavailable || ($qty !== null && $qty <= 0)) {
+                        $booking->inventoryItems()->detach($invItem->id);
+                        $lines[] = "$name — Removed";
+                    } else {
+                        $updateData = [];
+                        if ($qty !== null) {
+                            $updateData['quantity'] = $qty;
+                        }
+                        if (isset($it['unit_price'])) {
+                            $updateData['quoted_unit_price'] = (float)$it['unit_price'];
+                        }
+                        
+                        if (!empty($updateData)) {
+                            $booking->inventoryItems()->updateExistingPivot($invItem->id, $updateData);
+                        }
+                        
+                        // Re-fetch pivot to get the latest updated values for the sum
+                        $pivot = $booking->inventoryItems()->where('inventory_item_id', $invItem->id)->first();
+                        $finalQty = $pivot ? $pivot->pivot->quantity : 0;
+                        $finalUnitCost = $pivot ? $pivot->pivot->quoted_unit_price : 0;
+                        
+                        $newRawMaterialsSum += ($finalQty * $finalUnitCost);
+                        $lines[] = "$name — Qty: $finalQty @ ₱" . number_format($finalUnitCost, 2);
+                    }
+                }
             }
+            
+            // Only update if there are items, to avoid wiping out the sum if the form didn't submit items array correctly
+            if ($newRawMaterialsSum > 0) {
+                $booking->raw_materials_sum = $newRawMaterialsSum;
+                // If admin didn't explicitly override final_quoted_price in the form request, recalculate it.
+                if (!$request->filled('final_quoted_price')) {
+                    $booking->final_quoted_price = $newRawMaterialsSum * ($booking->multiplier ?? 3.0);
+                    $booking->total_quoted = $booking->final_quoted_price;
+                }
+            }
+            
             $itemsSummary = "\nItem adjustments:\n" . implode("\n", $lines);
             $adminNote = trim(($adminNote ? $adminNote . "\n\n" : '') . $itemsSummary);
         }
